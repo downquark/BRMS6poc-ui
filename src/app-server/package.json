@@ -1,7 +1,7 @@
 {
-    "name": "BRMS6-POC-UI-app",
+    "name": "BRMS6-POC-UI-server",
     "version": "0.0.1",
-    "description": "BRMS6 POC UI App",
+    "description": "BRMS6 POC UI Server",
     "keywords": [
         "Dojo",
         "JavaScript",
@@ -18,12 +18,8 @@
         "type": "git",
         "url": "https://github.com/downquark/BRMS6poc-ui"
     },
-    "dojoBuild": "package.js",
     "dependencies": {
-        "dojo": ">= 1.9.x",
-        "dijit": ">= 1.9.x",
-        "dojox": ">= 1.9.x",
-        "util": ">= 1.9.x"
+        "dojo": ">= 1.9.x"
     },
     "main": "main"
 }

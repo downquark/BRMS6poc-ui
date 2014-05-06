@@ -11,7 +11,7 @@ define([
         appPort = process.env.OPENSHIFT_NODEJS_PORT || 8080,
         appIPaddress = process.env.OPENSHIFT_NODEJS_IP,
         env = process.env.NODE_ENV || 'development',
-        root = '/src',
+        root = '/lib',
         signals = ['SIGHUP', 'SIGINT', 'SIGQUIT', 'SIGILL', 'SIGTRAP', 'SIGABRT',
             'SIGBUS', 'SIGFPE', 'SIGUSR1', 'SIGSEGV', 'SIGUSR2', 'SIGTERM'
         ],
@@ -43,6 +43,7 @@ define([
         app.use(express.compress());
         app.use(express.logger(env === 'production' ? null : 'dev'));
         app.use('/src', express['static']('./src'));
+        app.use('/lib', express['static']('./lib', { maxAge: 86400000 }));
         app.use(app.router);
         app.use('/500', function (req, res, next) {
             next(new Error('All your base are belong to us!'));
@@ -73,7 +74,7 @@ define([
         });
     });
     app.get('/', function (req, response) {
-        fs.readFile('./src/index.html', 'binary', function (err, file) {
+        fs.readFile('./lib/index.html', 'binary', function (err, file) {
             if (err) {
                 response.writeHead(500, {
                     'Content-Type': 'text/plain'

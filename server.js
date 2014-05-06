@@ -21,9 +21,6 @@ dojoConfig = {
         name : 'dijit',
         location : 'dijit'
     }, {
-        name : 'app',
-        location : 'app'
-    }, {
         name : 'app-server',
         location : 'app-server'
     } ],
