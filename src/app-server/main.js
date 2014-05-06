@@ -90,6 +90,12 @@ define([
             response.end();
         });
     });
+    app.put('/add', function (req, response) {
+        response.writeHead(200, {
+            'Content-Type': 'text/plain'
+        });
+        response.end('hello');
+    });
     app.get('/404', function (req, res, next) {
         next();
     });

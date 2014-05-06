@@ -1,57 +1,62 @@
-/**
- * This file is the application's main JavaScript file. It is listed as a dependency in run.js and will automatically
- * load when run.js loads.
- *
- * Because this file has the special filename `main.js`, and because we've registered the `app` package in run.js,
- * whatever object this module returns can be loaded by other files simply by requiring `app` (instead of `app/main`).
- *
- * Our first dependency is to the `dojo/has` module, which allows us to conditionally execute code based on
- * configuration settings or environmental information. Unlike a normal conditional, these branches can be compiled
- * away by the build system; see `staticHasFeatures` in app.profile.js for more information.
- *
- * Our second dependency is to the special module `require`; this allows us to make additional require calls using
- * module IDs relative to this module within the body of the define callback.
- *
- * In all cases, whatever function is passed to define() is only invoked once, and the returned value is cached.
- *
- * More information about everything described about the loader throughout this file can be found at
- * <http://dojotoolkit.org/reference-guide/loader/amd.html>.
- */
-define([ 'dojo/has', 'require' ], function (has, require) {
-	var app = {};
-
-	/**
-	 * This main.js file conditionally executes different code depending upon the host environment it is loaded in.
-	 * This is an increasingly common pattern when dealing with applications that run in different environments that
-	 * require different functionality (i.e. client/server or desktop/tablet/phone).
-	 */
-	if (has('host-browser')) {
-		/*
-		 * This require call's first dependency, `./Dialog`, uses a relative module identifier; you should use this
-		 * type of notation for dependencies *within* a package in order to ensure the package is fully portable. It
-		 * works like a path, where `./` refers to the current directory and `../` refers to the parent directory. If
-		 * you are referring to a module in a *different* package (like `dojo` or `dijit`), you should *not* use a
-		 * relative module identifier.
-		 *
-		 * The second dependency is a plugin dependency; in this case, it is a dependency on the special functionality
-		 * of the `dojo/domReady` plugin, which simply waits until the DOM is ready before resolving.
-		 * The `!` after the module name indicates you want to use special plugin functionality; if you were to
-		 * require just `dojo/domReady`, it would load that module just like any other module, without the special
-		 * plugin functionality.
-		 */
-		require([ './Dialog', 'dojo/domReady!' ], function (Dialog) {
-			app.dialog = new Dialog().placeAt(document.body);
-
-			// It is important to remember to always call startup on widgets after you have added them to the DOM.
-			// It will not hurt if you do it twice, but things will often not work right if you forget to do it.
-			app.dialog.startup();
-
-			// And now we just show the dialog to demonstrate that, yes, the example app has loaded successfully.
-			app.dialog.show();
-		});
-	}
-	else {
-		// TODO: Eventually, the Boilerplate will actually have a useful server implementation here :)
-		console.log('Hello from the server!');
-	}
+require([
+    'dojo/dom-construct',
+    'dojo/dom-style',
+    'dojo/request/xhr',
+    'dijit/form/Button',
+    'dijit/form/Form',
+    'dijit/form/TextBox',
+    'dijit/layout/BorderContainer',
+    'dijit/layout/ContentPane',
+    'app/IntTextBox',
+    'dojo/domReady!'
+], function (construct, style, xhr, Button, Form, TextBox, BorderContainer,
+    ContentPane, IntTextBox) {
+    var bc, form, onSubmit, param0, resultBox;
+    onSubmit = function (e) {
+        e.preventDefault();
+        if (form.validate()) {
+            var param = form.get('value');
+            form.reset();
+            xhr('/add', {
+                data: param,
+                method: 'PUT'
+            }).then(function (data) {
+                var result = Number(param.zero) + Number(param.one);
+                resultBox.set('value', result);
+                construct.create('p', {
+                    innerHTML: param.zero + ' + ' + param.one + ' = ' + result
+                }, 'history', 'first');
+                param0.focus();
+            }, function (error) {
+                alert(error);
+            });
+        } else {
+            return false;
+        }
+        return true;
+    };
+    bc = new BorderContainer({}, 'borderContainer');
+    form = new Form({
+        region: 'top',
+        onSubmit: onSubmit
+    }, 'form');
+    resultBox = new TextBox({
+        disabled: true
+    }, 'result');
+    param0 = new IntTextBox({
+        name: 'zero'
+    }, 'param0');
+    new IntTextBox({
+        name: 'one'
+    }, 'param1');
+    new Button({
+        label: '=',
+        type: 'submit'
+    }, 'submit');
+    bc.addChild(form);
+    bc.addChild(new ContentPane({
+        region: 'center'
+    }, 'historyPane'));
+    style.set('borderContainer', 'display', 'block');
+    bc.startup();
 });

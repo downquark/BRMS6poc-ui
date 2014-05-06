@@ -1,10 +1,34 @@
-/**
- * If you are developing a project that makes use of Dijit widgets, you will probably want to include the two files
- * below; otherwise, you can remove them. When building for release, Dojo will automatically combine all of your
- * @imported CSS files into a single file.
- *
- * It is highly, highly recommended that you develop your CSS using Stylus: http://learnboost.github.com/stylus/.
- */
-
 @import '../../dojo/resources/dojo.css';
 @import '../../dijit/themes/tundra/tundra.css';
+
+html,body {
+    height:100%;
+    margin:0;
+    overflow:hidden;
+    width:100%
+}
+body {
+    font:14px 'Ubuntu Mono',clean,sans-serif
+}
+h2 {
+    font-family:'Lobster',cursive;
+    margin-top:0
+}
+#borderContainer {
+    height:600px;
+	margin-left:auto;
+    margin-right:auto;
+    width:600px
+}
+span#plus {
+	margin-left:6px
+}
+#history p {
+	margin:2px 0
+}
+.dijitBorderContainerPane {
+	padding:6px
+}
+.dijitTextBox {
+    width:8em
+}
